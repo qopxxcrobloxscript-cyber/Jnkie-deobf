@@ -2,23 +2,23 @@
 import hashlib
 import os
 import time
-from fastapi import FastAPI, HTTPException, Header
-from fastapi.responses import PlainTextResponse
+from fastapi import FastAPI, HTTPException, Header, Request
+from fastapi.responses import PlainTextResponse, HTMLResponse
+from fastapi.templating import Jinja2Templates
 import requests
 
 API = ("https://api.jnkie.com/api/v1/luascripts/delivery/"
        "0c237fdefab6050afef9e14c974903d107432c6eee626c0dceb9561b6cd7d3cc"
        "?v=2&errors=text")
 
-# 環境変数から読む。絶対にソースに直書きしない
 SCRIPT_KEY = os.environ["JNKIE_SCRIPT_KEY"]
-# エグゼクターからのアクセスを守るための共有トークン
 CLIENT_TOKEN = os.environ["CLIENT_TOKEN"]
 
 app = FastAPI()
+templates = Jinja2Templates(directory="templates")
 
 _cache = {"url": None, "body": None, "hash": None, "ts": 0}
-CACHE_TTL = 60  # 秒
+CACHE_TTL = 60
 
 
 def fetch_from_api():
@@ -45,6 +45,11 @@ def fetch_body(url):
     r = requests.get(url, timeout=15)
     r.raise_for_status()
     return r.text
+
+
+@app.get("/", response_class=HTMLResponse)
+def index(request: Request):
+    return templates.TemplateResponse("index.html", {"request": request})
 
 
 @app.get("/url", response_class=PlainTextResponse)
