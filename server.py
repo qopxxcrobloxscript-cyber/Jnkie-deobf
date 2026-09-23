@@ -50,8 +50,9 @@ def fetch_body(url):
 @app.get("/", response_class=HTMLResponse)
 def index(request: Request):
     return templates.TemplateResponse(
-        "index.html",
-        {"request": request, "client_token": CLIENT_TOKEN},
+        request=request,
+        name="index.html",
+        context={"client_token": CLIENT_TOKEN},
     )
 
 
