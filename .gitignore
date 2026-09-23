@@ -1,0 +1,24 @@
+# 環境変数（キーを含むので絶対に上げない）
+.env
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+env/
+
+# エディタ
+.vscode/
+.idea/
+*.swp
+
+# OS
+.DS_Store
+Thumbs.db
+
+# ログ・出力
+*.log
+cache/
+output/
